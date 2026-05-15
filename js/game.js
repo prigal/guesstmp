@@ -9,11 +9,15 @@ function shuffle(arr) {
   return a;
 }
 
-export function createGame({ categoryKey, durationSec, onTick, onWord, onEnd }) {
+export function createGame({ categoryKey, durationSec, difficulty, onTick, onWord, onEnd }) {
   const cat = CATEGORIES[categoryKey];
   if (!cat) throw new Error(`Unknown category: ${categoryKey}`);
 
-  const deck = shuffle(cat.words);
+  const words = cat.words[difficulty];
+  if (!words || words.length === 0) {
+    throw new Error(`No words for ${categoryKey}/${difficulty}`);
+  }
+  const deck = shuffle(words);
   const history = [];
   let index = 0;
   let remainingMs = durationSec * 1000;

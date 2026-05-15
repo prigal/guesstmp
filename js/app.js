@@ -20,6 +20,7 @@ import {
 const state = {
   selectedCategory: null,
   selectedDuration: 60,
+  selectedDifficulty: 'facile',
   invertControls: false,
   game: null,
   score: 0,
@@ -64,6 +65,14 @@ function setupNavBindings() {
     });
   });
 
+  document.querySelectorAll('#difficulty-row .pill').forEach((pill) => {
+    pill.addEventListener('click', () => {
+      document.querySelectorAll('#difficulty-row .pill').forEach(p => p.classList.remove('selected'));
+      pill.classList.add('selected');
+      state.selectedDifficulty = pill.dataset.difficulty;
+    });
+  });
+
   document.getElementById('invert-controls').addEventListener('change', (e) => {
     state.invertControls = e.target.checked;
   });
@@ -80,6 +89,7 @@ function buildGame() {
   const game = createGame({
     categoryKey: state.selectedCategory,
     durationSec: state.selectedDuration,
+    difficulty: state.selectedDifficulty,
     onWord: (word) => setWord(word),
     onTick: (remaining) => {
       setTimer(remaining);

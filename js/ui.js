@@ -15,6 +15,7 @@ export function buildCategoryGrid(onSelect) {
   const grid = document.getElementById('category-grid');
   grid.innerHTML = '';
   for (const [key, cat] of Object.entries(CATEGORIES)) {
+    const total = cat.words.facile.length + cat.words.moyen.length + cat.words.difficile.length;
     const card = document.createElement('button');
     card.className = 'category-card';
     card.dataset.key = key;
@@ -22,7 +23,7 @@ export function buildCategoryGrid(onSelect) {
     card.innerHTML = `
       <div class="cat-emoji">${cat.emoji}</div>
       <div class="cat-label">${cat.label}</div>
-      <div class="cat-count">${cat.words.length} mots</div>
+      <div class="cat-count">${total} mots</div>
     `;
     card.addEventListener('click', () => {
       grid.querySelectorAll('.category-card').forEach(c => c.classList.remove('selected'));
