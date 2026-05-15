@@ -116,12 +116,20 @@ ol, ul {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 16px;
-  padding: 24px;
+  gap: 14px;
+  padding: 20px;
+}
+
+.home-logo {
+  width: clamp(96px, 22vw, 144px);
+  height: clamp(96px, 22vw, 144px);
+  border-radius: 22%;
+  box-shadow: 0 10px 30px rgba(236, 72, 153, 0.35);
+  margin-bottom: 4px;
 }
 
 .home-title {
-  font-size: clamp(2.5rem, 9vw, 4.5rem);
+  font-size: clamp(2rem, 7vw, 3.5rem);
   font-weight: 900;
   letter-spacing: -2px;
   text-align: center;

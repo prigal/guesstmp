@@ -6,12 +6,13 @@ Clone web mobile du jeu **Devine Tête** (Heads Up!) en français. Tiens le tél
 
 - 6 catégories en français (Animaux, Films, Métiers, Célébrités, Nourriture, Objets)
 - Durée configurable : 30 s / 60 s / 90 s
-- Détection de l'inclinaison via `DeviceOrientationEvent`
+- Détection de l'inclinaison via le vecteur gravité (`devicemotion`) — robuste au gimbal lock
 - Sons synthétisés en Web Audio (correct, pass, tick, fin)
 - Plein écran + verrouillage paysage + wake lock pendant la partie
 - Fallback boutons tactiles si l'inclinaison n'est pas disponible (desktop ou permission refusée)
 - Option « inverser les commandes » si le sens d'inclinaison ne correspond pas à ton téléphone
 - Récapitulatif final avec liste des mots trouvés/passés
+- **PWA installable** : icônes, manifest, service worker pour fonctionner hors-ligne
 
 ## 🚀 Lancer en local
 
@@ -61,6 +62,14 @@ js/
 data/
   categories.js   ← listes de mots par catégorie
 ```
+
+## 📲 Installer comme PWA
+
+- **Android (Chrome)** : un bouton « Installer l'app » apparaît sur l'écran d'accueil quand le navigateur détecte l'installabilité. Sinon, menu ⋮ → « Installer l'application ».
+- **iOS (Safari)** : icône Partager → « Sur l'écran d'accueil ».
+- **Desktop (Chrome/Edge)** : icône d'installation dans la barre d'URL, ou bouton sur l'accueil.
+
+Une fois installée, l'app fonctionne en plein écran, et le service worker la rend jouable hors connexion après la première visite.
 
 ## 🐛 Si ça ne marche pas
 

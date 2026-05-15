@@ -6,7 +6,14 @@
   <meta name="theme-color" content="#0f172a">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Devine Tête">
+  <meta name="description" content="Le jeu où tu devines ce qui est écrit sur ton front">
   <title>Devine Tête</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="icon" type="image/svg+xml" href="assets/logo.svg">
+  <link rel="apple-touch-icon" href="assets/icon-180.png">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -14,10 +21,12 @@
   <!-- Accueil -->
   <section id="screen-home" class="screen active">
     <div class="home-content">
+      <img src="assets/logo.svg" alt="Devine Tête" class="home-logo">
       <h1 class="home-title">Devine Tête</h1>
       <p class="home-subtitle">Le jeu où tu devines ce qui est écrit sur ton front</p>
       <button id="btn-play" class="btn btn-primary btn-xl">Jouer</button>
       <button id="btn-howto" class="btn btn-ghost">Comment jouer ?</button>
+      <button id="btn-install" class="btn btn-ghost hidden">📥 Installer l'app</button>
     </div>
   </section>
 
@@ -129,5 +138,36 @@
   </div>
 
   <script type="module" src="js/app.js"></script>
+  <script>
+    // Register service worker for offline / PWA install.
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js').catch(() => {});
+      });
+    }
+
+    // PWA install prompt (Chrome / Edge / Android).
+    let deferredInstallPrompt = null;
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredInstallPrompt = e;
+      const btn = document.getElementById('btn-install');
+      if (btn) btn.classList.remove('hidden');
+    });
+    document.addEventListener('click', (e) => {
+      if (e.target && e.target.id === 'btn-install' && deferredInstallPrompt) {
+        deferredInstallPrompt.prompt();
+        deferredInstallPrompt.userChoice.finally(() => {
+          deferredInstallPrompt = null;
+          e.target.classList.add('hidden');
+        });
+      }
+    });
+    window.addEventListener('appinstalled', () => {
+      const btn = document.getElementById('btn-install');
+      if (btn) btn.classList.add('hidden');
+      deferredInstallPrompt = null;
+    });
+  </script>
 </body>
 </html>
