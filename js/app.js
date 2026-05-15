@@ -25,6 +25,7 @@ const state = {
   game: null,
   score: 0,
   lastTickedSecond: null,
+  orientationActive: false,
 };
 
 function navigateTo(name) {
@@ -83,6 +84,68 @@ function setupNavBindings() {
   document.getElementById('btn-pass').addEventListener('click', () => {
     state.game?.pass();
   });
+
+  document.getElementById('btn-pause-game').addEventListener('click', pauseGame);
+  document.getElementById('btn-resume').addEventListener('click', resumeGame);
+  document.getElementById('btn-restart').addEventListener('click', restartGame);
+  document.getElementById('btn-quit-game').addEventListener('click', quitGame);
+
+  // Double-tap on the word area to pause.
+  let lastTapAt = 0;
+  document.getElementById('game-word').addEventListener('click', () => {
+    const now = Date.now();
+    if (now - lastTapAt < 350) {
+      lastTapAt = 0;
+      pauseGame();
+    } else {
+      lastTapAt = now;
+    }
+  });
+}
+
+function pauseGame() {
+  if (!state.game || state.game.isPaused() || state.game.isEnded()) return;
+  state.game.pause();
+  if (state.orientationActive) stopOrientationGame();
+  document.getElementById('pause-overlay').classList.remove('hidden');
+}
+
+function resumeGame() {
+  if (!state.game || !state.game.isPaused()) return;
+  document.getElementById('pause-overlay').classList.add('hidden');
+  state.game.resume();
+  if (state.orientationActive) {
+    startOrientationGame({
+      onCorrect: () => state.game?.correct(),
+      onPass: () => state.game?.pass(),
+      invert: state.invertControls,
+    });
+  }
+}
+
+function restartGame() {
+  if (state.game) {
+    state.game.abort();
+    state.game = null;
+  }
+  stopOrientationGame();
+  state.orientationActive = false;
+  document.getElementById('pause-overlay').classList.add('hidden');
+  startGame();
+}
+
+function quitGame() {
+  if (state.game) {
+    state.game.abort();
+    state.game = null;
+  }
+  stopOrientationGame();
+  state.orientationActive = false;
+  releaseWakeLock();
+  unlockOrientation();
+  exitFullscreen();
+  document.getElementById('pause-overlay').classList.add('hidden');
+  navigateTo('home');
 }
 
 function buildGame() {
@@ -115,6 +178,7 @@ function buildGame() {
   const origCorrect = game.correct;
   const origPass = game.pass;
   game.correct = () => {
+    if (game.isPaused() || game.isEnded()) return;
     flashCorrect();
     playCorrect();
     state.score += 1;
@@ -122,6 +186,7 @@ function buildGame() {
     origCorrect();
   };
   game.pass = () => {
+    if (game.isPaused() || game.isEnded()) return;
     flashWrong();
     playPass();
     origPass();
@@ -144,7 +209,9 @@ async function startGame() {
   setScore(0);
   state.score = 0;
   state.lastTickedSecond = null;
+  state.orientationActive = false;
   setWord('');
+  document.getElementById('pause-overlay').classList.add('hidden');
 
   showScreen('game');
 
@@ -163,6 +230,7 @@ async function startGame() {
       onPass: () => state.game?.pass(),
       invert: state.invertControls,
     });
+    state.orientationActive = true;
   }
 }
 

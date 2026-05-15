@@ -12,7 +12,6 @@
   <title>Devine Tête</title>
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" type="image/png" href="favicon.png">
-  <link rel="icon" type="image/svg+xml" href="assets/logo.svg">
   <link rel="apple-touch-icon" href="assets/icon-180.png">
   <link rel="stylesheet" href="style.css">
 </head>
@@ -21,7 +20,7 @@
   <!-- Accueil -->
   <section id="screen-home" class="screen active">
     <div class="home-content">
-      <img src="assets/logo.svg" alt="Devine Tête" class="home-logo">
+      <img src="assets/logo.png" alt="Devine Tête" class="home-logo">
       <h1 class="home-title">Devine Tête</h1>
       <p class="home-subtitle">Le jeu où tu devines ce qui est écrit sur ton front</p>
       <button id="btn-play" class="btn btn-primary btn-xl">Jouer</button>
@@ -94,6 +93,7 @@
   <section id="screen-game" class="screen">
     <div class="game-topbar">
       <div id="game-timer" class="game-timer">60</div>
+      <button id="btn-pause-game" class="game-pause-btn" aria-label="Pause">⏸</button>
       <div id="game-score" class="game-score">0</div>
     </div>
 
@@ -114,6 +114,16 @@
 
     <!-- Décompte de démarrage -->
     <div id="countdown" class="countdown hidden"><span id="countdown-text">3</span></div>
+
+    <!-- Menu pause -->
+    <div id="pause-overlay" class="pause-overlay hidden">
+      <div class="pause-modal">
+        <div class="pause-title">⏸ Pause</div>
+        <button id="btn-resume" class="btn btn-primary btn-xl">▶ Reprendre</button>
+        <button id="btn-restart" class="btn btn-ghost">🔄 Recommencer</button>
+        <button id="btn-quit-game" class="btn btn-ghost">🚪 Quitter</button>
+      </div>
+    </div>
   </section>
 
   <!-- Récapitulatif -->
@@ -133,6 +143,7 @@
       <ul id="recap-list" class="recap-list"></ul>
       <div class="setup-actions">
         <button id="btn-replay" class="btn btn-primary">Rejouer</button>
+        <button class="btn btn-ghost" data-nav="setup">Changer de catégorie</button>
         <button class="btn btn-ghost" data-nav="home">Menu</button>
       </div>
     </div>

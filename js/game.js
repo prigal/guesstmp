@@ -24,14 +24,11 @@ export function createGame({ categoryKey, durationSec, difficulty, onTick, onWor
   let lastTickAt = null;
   let intervalId = null;
   let ended = false;
+  let paused = false;
   let lastTickSecond = Math.ceil(durationSec);
 
-  function getCurrentWord() {
-    return deck[index];
-  }
-
   function record(status) {
-    if (ended) return;
+    if (ended || paused) return;
     const word = deck[index];
     if (word == null) return;
     history.push({ word, status });
@@ -53,17 +50,29 @@ export function createGame({ categoryKey, durationSec, difficulty, onTick, onWor
     remainingMs -= delta;
     const remainingSec = Math.max(0, remainingMs / 1000);
     onTick?.(remainingSec);
-    // emit a per-second tick callback via lastTickSecond change for sound
     const curSec = Math.ceil(remainingSec);
-    if (curSec !== lastTickSecond) {
-      lastTickSecond = curSec;
-      // expose via onTick second-boundary (caller may inspect)
-    }
+    if (curSec !== lastTickSecond) lastTickSecond = curSec;
     if (remainingMs <= 0) end();
   }
 
   function start() {
     onWord?.(deck[index]);
+    lastTickAt = performance.now();
+    intervalId = setInterval(tickLoop, 100);
+  }
+
+  function pause() {
+    if (paused || ended) return;
+    paused = true;
+    if (intervalId) {
+      clearInterval(intervalId);
+      intervalId = null;
+    }
+  }
+
+  function resume() {
+    if (!paused || ended) return;
+    paused = false;
     lastTickAt = performance.now();
     intervalId = setInterval(tickLoop, 100);
   }
@@ -76,17 +85,27 @@ export function createGame({ categoryKey, durationSec, difficulty, onTick, onWor
     onEnd?.({ history });
   }
 
-  function getRemaining() {
-    return remainingMs / 1000;
+  // Like end(), but doesn't fire onEnd — used when the player quits or restarts
+  // mid-game, so we don't navigate to the recap screen.
+  function abort() {
+    if (ended) return;
+    ended = true;
+    if (intervalId) clearInterval(intervalId);
+    intervalId = null;
   }
 
   return {
     start,
     correct,
     pass,
+    pause,
+    resume,
     end,
-    getRemaining,
-    getCurrentWord,
+    abort,
+    isPaused: () => paused,
+    isEnded: () => ended,
+    getRemaining: () => remainingMs / 1000,
+    getCurrentWord: () => deck[index],
     getHistory: () => history,
   };
 }

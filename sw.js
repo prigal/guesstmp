@@ -1,4 +1,4 @@
-const CACHE_NAME = 'devine-tete-v2';
+const CACHE_NAME = 'devine-tete-v3';
 const PRECACHE = [
   './',
   './index.html',
@@ -12,7 +12,7 @@ const PRECACHE = [
   './js/orientation.js',
   './js/ui.js',
   './data/categories.js',
-  './assets/logo.svg',
+  './assets/logo.png',
   './assets/icon-192.png',
   './assets/icon-512.png',
   './assets/icon-180.png',
