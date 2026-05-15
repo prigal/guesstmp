@@ -19,6 +19,7 @@ export function buildCategoryGrid(onSelect) {
     const card = document.createElement('button');
     card.className = 'category-card';
     card.dataset.key = key;
+    card.style.setProperty('--cat-color', cat.color);
     card.style.borderColor = cat.color;
     card.innerHTML = `
       <div class="cat-emoji">${cat.emoji}</div>

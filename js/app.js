@@ -20,7 +20,7 @@ import {
 const state = {
   selectedCategory: null,
   selectedDuration: 60,
-  selectedDifficulty: 'facile',
+  selectedDifficulty: 'moyen',
   invertControls: false,
   game: null,
   score: 0,
@@ -32,19 +32,29 @@ function navigateTo(name) {
   if (name === 'setup') {
     buildCategoryGrid((key) => {
       state.selectedCategory = key;
-      updateContinueButton();
+      revealSettings(true);
     });
+    const settings = document.getElementById('setup-settings');
     if (state.selectedCategory) {
       const card = document.querySelector(`.category-card[data-key="${state.selectedCategory}"]`);
       card?.classList.add('selected');
+      settings.classList.remove('hidden');
+    } else {
+      settings.classList.add('hidden');
     }
-    updateContinueButton();
   }
   showScreen(name);
 }
 
-function updateContinueButton() {
-  document.getElementById('btn-to-prep').disabled = !state.selectedCategory;
+function revealSettings(shouldScroll) {
+  const settings = document.getElementById('setup-settings');
+  const wasHidden = settings.classList.contains('hidden');
+  settings.classList.remove('hidden');
+  if (shouldScroll && wasHidden) {
+    setTimeout(() => {
+      settings.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 80);
+  }
 }
 
 function setupNavBindings() {
@@ -72,10 +82,6 @@ function setupNavBindings() {
       pill.classList.add('selected');
       state.selectedDifficulty = pill.dataset.difficulty;
     });
-  });
-
-  document.getElementById('invert-controls').addEventListener('change', (e) => {
-    state.invertControls = e.target.checked;
   });
 
   document.getElementById('btn-correct').addEventListener('click', () => {
