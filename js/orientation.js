@@ -1,34 +1,36 @@
-// In landscape vertical orientation (phone held on forehead), the device's
-// `gamma` axis suffers from gimbal lock: it saturates at ±90° and can't reliably
-// detect tilt in both directions. We use `beta` instead, which has range
-// -180..180 and remains well-behaved at the orientations we care about.
+// We use `devicemotion` instead of `deviceorientation` because the Euler
+// angles (alpha/beta/gamma) suffer from gimbal lock and axis saturation when
+// the phone is held vertically in landscape — exactly the position used here.
+// The gravity vector from `accelerationIncludingGravity` rotates linearly with
+// device tilt regardless of orientation, so we can read tilt directly from it.
+//
+// When the phone is held vertically against the forehead, gravity points along
+// the device's x-axis (with sign depending on landscape direction). Tilting the
+// top of the phone forward/backward rotates the device around its y-axis,
+// which projects a non-zero component of gravity onto the device's z-axis
+// (the screen normal). We track that z-component to detect tilt direction.
 
-const TRIGGER_DELTA = 30;
-const DEADZONE_DELTA = 12;
+const TRIGGER_DELTA = 4.0;   // m/s² ~ sin(θ) * 9.8 → ~24°
+const DEADZONE_DELTA = 1.5;  // ~9°
 const COOLDOWN_MS = 700;
 
 let onCorrect = null;
 let onPass = null;
 let active = false;
-let neutralBeta = 0;
+let neutralZ = 0;
 let inDeadzone = true;
 let lastTriggerAt = 0;
 let invertControls = false;
 let eventReceived = false;
 let listenerAttached = false;
 
-function normalizeDelta(d) {
-  while (d > 180) d -= 360;
-  while (d < -180) d += 360;
-  return d;
-}
-
-function handleOrientation(event) {
-  if (event.beta == null) return;
+function handleMotion(event) {
+  const g = event.accelerationIncludingGravity;
+  if (!g || g.z == null) return;
   eventReceived = true;
   if (!active) return;
 
-  const delta = normalizeDelta(event.beta - neutralBeta);
+  const delta = g.z - neutralZ;
   const now = Date.now();
 
   if (!inDeadzone) {
@@ -53,15 +55,16 @@ function handleOrientation(event) {
 
 function attachListener() {
   if (listenerAttached) return;
-  window.addEventListener('deviceorientation', handleOrientation);
+  window.addEventListener('devicemotion', handleMotion);
   listenerAttached = true;
 }
 
 export async function requestOrientationPermission() {
-  if (typeof DeviceOrientationEvent !== 'undefined'
-      && typeof DeviceOrientationEvent.requestPermission === 'function') {
+  // iOS 13+ requires explicit permission for motion sensors.
+  if (typeof DeviceMotionEvent !== 'undefined'
+      && typeof DeviceMotionEvent.requestPermission === 'function') {
     try {
-      const state = await DeviceOrientationEvent.requestPermission();
+      const state = await DeviceMotionEvent.requestPermission();
       if (state === 'granted') {
         attachListener();
         return true;
@@ -81,9 +84,10 @@ export function calibrateNeutral(timeoutMs = 2000) {
     const samples = [];
 
     const sampler = (event) => {
-      if (event.beta == null) return;
+      const g = event.accelerationIncludingGravity;
+      if (!g || g.z == null) return;
       eventReceived = true;
-      samples.push(event.beta);
+      samples.push(g.z);
       if (samples.length >= 10) {
         finish(true);
       }
@@ -92,16 +96,16 @@ export function calibrateNeutral(timeoutMs = 2000) {
     const finish = (ok) => {
       if (resolved) return;
       resolved = true;
-      window.removeEventListener('deviceorientation', sampler);
+      window.removeEventListener('devicemotion', sampler);
       if (samples.length > 0) {
-        neutralBeta = samples.reduce((a, b) => a + b, 0) / samples.length;
+        neutralZ = samples.reduce((a, b) => a + b, 0) / samples.length;
         resolve(true);
       } else {
         resolve(false);
       }
     };
 
-    window.addEventListener('deviceorientation', sampler);
+    window.addEventListener('devicemotion', sampler);
     setTimeout(() => finish(false), timeoutMs);
   });
 }
@@ -125,7 +129,7 @@ export function hasOrientationEvents() {
 
 export function detachOrientation() {
   if (listenerAttached) {
-    window.removeEventListener('deviceorientation', handleOrientation);
+    window.removeEventListener('devicemotion', handleMotion);
     listenerAttached = false;
   }
   active = false;
