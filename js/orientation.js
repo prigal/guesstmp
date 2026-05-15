@@ -1,23 +1,34 @@
-const TRIGGER_DELTA = 35;
-const DEADZONE_DELTA = 15;
+// In landscape vertical orientation (phone held on forehead), the device's
+// `gamma` axis suffers from gimbal lock: it saturates at ±90° and can't reliably
+// detect tilt in both directions. We use `beta` instead, which has range
+// -180..180 and remains well-behaved at the orientations we care about.
+
+const TRIGGER_DELTA = 30;
+const DEADZONE_DELTA = 12;
 const COOLDOWN_MS = 700;
 
 let onCorrect = null;
 let onPass = null;
 let active = false;
-let neutralGamma = 0;
+let neutralBeta = 0;
 let inDeadzone = true;
 let lastTriggerAt = 0;
 let invertControls = false;
 let eventReceived = false;
 let listenerAttached = false;
 
+function normalizeDelta(d) {
+  while (d > 180) d -= 360;
+  while (d < -180) d += 360;
+  return d;
+}
+
 function handleOrientation(event) {
-  if (event.gamma == null) return;
+  if (event.beta == null) return;
   eventReceived = true;
   if (!active) return;
 
-  const delta = event.gamma - neutralGamma;
+  const delta = normalizeDelta(event.beta - neutralBeta);
   const now = Date.now();
 
   if (!inDeadzone) {
@@ -60,7 +71,6 @@ export async function requestOrientationPermission() {
       return false;
     }
   }
-  // Other browsers: just attach.
   attachListener();
   return true;
 }
@@ -68,15 +78,13 @@ export async function requestOrientationPermission() {
 export function calibrateNeutral(timeoutMs = 2000) {
   return new Promise((resolve) => {
     let resolved = false;
-    let bestGamma = null;
-
     const samples = [];
+
     const sampler = (event) => {
-      if (event.gamma == null) return;
+      if (event.beta == null) return;
       eventReceived = true;
-      samples.push(event.gamma);
-      // collect 5 samples then average
-      if (samples.length >= 5) {
+      samples.push(event.beta);
+      if (samples.length >= 10) {
         finish(true);
       }
     };
@@ -86,7 +94,7 @@ export function calibrateNeutral(timeoutMs = 2000) {
       resolved = true;
       window.removeEventListener('deviceorientation', sampler);
       if (samples.length > 0) {
-        neutralGamma = samples.reduce((a, b) => a + b, 0) / samples.length;
+        neutralBeta = samples.reduce((a, b) => a + b, 0) / samples.length;
         resolve(true);
       } else {
         resolve(false);
