@@ -1,4 +1,5 @@
 import { CATEGORIES } from '../data/categories.js';
+import { DESCRIPTIONS } from '../data/descriptions.js';
 import { createGame } from './game.js';
 import {
   showScreen, buildCategoryGrid, setGameBackground, setWord, setTimer, setScore,
@@ -17,7 +18,11 @@ import {
   requestWakeLock, releaseWakeLock
 } from './fullscreen.js';
 
+const EXPLAIN_MS = 4500;
+let explainTimer = null;
+
 const state = {
+  explaining: false,
   selectedCategory: null,
   selectedDuration: 60,
   selectedDifficulty: 'moyen',
@@ -91,6 +96,10 @@ function setupNavBindings() {
     state.game?.pass();
   });
 
+  const explainOverlay = document.getElementById('explain-overlay');
+  explainOverlay.style.setProperty('--explain-ms', `${EXPLAIN_MS}ms`);
+  explainOverlay.addEventListener('click', dismissExplanation);
+
   document.getElementById('btn-pause-game').addEventListener('click', pauseGame);
   document.getElementById('btn-resume').addEventListener('click', resumeGame);
   document.getElementById('btn-restart').addEventListener('click', restartGame);
@@ -109,8 +118,56 @@ function setupNavBindings() {
   });
 }
 
+function showExplanation(word) {
+  clearExplanation();
+  if (!state.game) return;
+  state.explaining = true;
+  state.game.pause();
+  if (state.orientationActive) stopOrientationGame();
+  const text = DESCRIPTIONS[word] || 'Pas de description disponible pour ce mot.';
+  // Let the red flash read as "wrong" for a beat before the card appears.
+  explainTimer = setTimeout(() => {
+    document.getElementById('explain-word').textContent = word;
+    document.getElementById('explain-text').textContent = text;
+    const bar = document.getElementById('explain-bar');
+    bar.style.animation = 'none';
+    void bar.offsetWidth;
+    bar.style.animation = '';
+    document.getElementById('explain-overlay').classList.remove('hidden');
+    explainTimer = setTimeout(dismissExplanation, EXPLAIN_MS);
+  }, 350);
+}
+
+function clearExplanation() {
+  if (explainTimer) {
+    clearTimeout(explainTimer);
+    explainTimer = null;
+  }
+  state.explaining = false;
+  document.getElementById('explain-overlay').classList.add('hidden');
+}
+
+function dismissExplanation() {
+  if (!state.explaining) return;
+  clearExplanation();
+  if (!state.game || state.game.isEnded()) return;
+  // If the pause menu took over in the meantime, leave the game paused.
+  if (!document.getElementById('pause-overlay').classList.contains('hidden')) return;
+  state.game.resume();
+  if (state.orientationActive) {
+    startOrientationGame({
+      onCorrect: () => state.game?.correct(),
+      onPass: () => state.game?.pass(),
+      invert: state.invertControls,
+    });
+  }
+}
+
 function pauseGame() {
-  if (!state.game || state.game.isPaused() || state.game.isEnded()) return;
+  if (!state.game || state.game.isEnded()) return;
+  const wasExplaining = state.explaining;
+  clearExplanation();
+  if (!wasExplaining && state.game.isPaused()) return;
   state.game.pause();
   if (state.orientationActive) stopOrientationGame();
   document.getElementById('pause-overlay').classList.remove('hidden');
@@ -130,6 +187,7 @@ function resumeGame() {
 }
 
 function restartGame() {
+  clearExplanation();
   if (state.game) {
     state.game.abort();
     state.game = null;
@@ -141,6 +199,7 @@ function restartGame() {
 }
 
 function quitGame() {
+  clearExplanation();
   if (state.game) {
     state.game.abort();
     state.game = null;
@@ -170,6 +229,7 @@ function buildGame() {
       }
     },
     onEnd: ({ history }) => {
+      clearExplanation();
       stopOrientationGame();
       playEnd();
       releaseWakeLock();
@@ -193,9 +253,11 @@ function buildGame() {
   };
   game.pass = () => {
     if (game.isPaused() || game.isEnded()) return;
+    const missed = game.getCurrentWord();
     flashWrong();
     playPass();
     origPass();
+    if (!game.isEnded()) showExplanation(missed);
   };
   return game;
 }
@@ -218,6 +280,7 @@ async function startGame() {
   state.orientationActive = false;
   setWord('');
   document.getElementById('pause-overlay').classList.add('hidden');
+  clearExplanation();
 
   showScreen('game');
 

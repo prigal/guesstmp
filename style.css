@@ -531,6 +531,80 @@ ol, ul {
   background: rgba(0, 0, 0, 0.25);
 }
 
+/* Explication du mot raté */
+.explain-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px max(24px, env(safe-area-inset-right)) 24px max(24px, env(safe-area-inset-left));
+  background: rgba(15, 23, 42, 0.94);
+  animation: explain-in 0.2s ease both;
+}
+
+.explain-overlay.hidden {
+  display: none;
+}
+
+@keyframes explain-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.explain-card {
+  width: 100%;
+  max-width: 760px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.explain-label {
+  color: #f87171;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  font-size: 0.85rem;
+}
+
+.explain-word {
+  font-size: clamp(1.8rem, 6vw, 3rem);
+  font-weight: 900;
+  line-height: 1.1;
+}
+
+.explain-text {
+  font-size: clamp(1rem, 2.8vw, 1.35rem);
+  line-height: 1.45;
+  color: #e2e8f0;
+  margin: 0 auto;
+  max-width: 680px;
+}
+
+.explain-progress {
+  height: 4px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-top: 10px;
+}
+
+.explain-progress-bar {
+  height: 100%;
+  width: 100%;
+  background: #f87171;
+  transform-origin: left;
+  animation: explain-shrink var(--explain-ms, 4500ms) linear forwards;
+}
+
+@keyframes explain-shrink {
+  from { transform: scaleX(1); }
+  to { transform: scaleX(0); }
+}
+
 /* Countdown */
 .countdown {
   position: absolute;
