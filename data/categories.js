@@ -483,18 +483,15 @@ export const CATEGORIES = {
     words: {
       facile: [
         'Monaco', 'Monza', 'Silverstone', 'Spa-Francorchamps', 'Suzuka',
-        'Interlagos', 'Abu Dhabi', 'Barcelone', 'Shanghai',
-        'Circuit Gilles-Villeneuve', 'Bakou', 'Zandvoort'
+        'Interlagos', 'Abu Dhabi', 'Circuit Gilles-Villeneuve', 'Bakou'
       ],
       moyen: [
-        'Hungaroring', 'Imola', 'Marina Bay', 'Austin', 'Red Bull Ring',
-        'Sakhir', 'Albert Park', 'Jeddah', 'Las Vegas', 'Miami', 'Losail',
-        'Paul Ricard', 'Nürburgring', 'Mexico'
+        'Barcelone', 'Shanghai', 'Zandvoort', 'Hungaroring', 'Imola',
+        'Marina Bay', 'Austin', 'Red Bull Ring'
       ],
       difficile: [
-        'Magny-Cours', 'Estoril', 'Portimão', 'Mugello', 'Istanbul Park',
-        'Kyalami', 'Watkins Glen', 'Hockenheim', 'Sepang', 'Sotchi',
-        'Indianapolis', 'Madrid', 'Buenos Aires', 'Jacarepaguá'
+        'Sakhir', 'Albert Park', 'Jeddah', 'Las Vegas', 'Miami', 'Losail',
+        'Mexico', 'Madrid'
       ]
     }
   }
