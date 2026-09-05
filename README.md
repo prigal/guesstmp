@@ -13,6 +13,8 @@ Clone web mobile du jeu **Devine Tête** (Heads Up!) en français. Tiens le tél
 - Option « inverser les commandes » si le sens d'inclinaison ne correspond pas à ton téléphone
 - Récapitulatif final avec liste des mots trouvés/passés
 - **PWA installable** : icônes, manifest, service worker pour fonctionner hors-ligne
+- **Explication du mot raté** : après une passe, une carte « Raté ! » explique le mot en 2-3 lignes (chrono en pause)
+- **Mode Circuits F1** 🏁 : à la place d'un mot, le tracé stylisé noir et blanc d'un circuit vu d'en haut — à faire deviner à partir de sa forme
 
 ## 🚀 Lancer en local
 

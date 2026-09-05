@@ -471,5 +471,27 @@ export const CATEGORIES = {
         'Caterham', 'Marussia', 'Super Aguri'
       ]
     }
+  },
+
+  circuits: {
+    label: 'Circuits F1',
+    emoji: '🏁',
+    color: '#f1f5f9',
+    render: 'circuit',
+    mono: true,
+    unit: 'tracés',
+    words: {
+      facile: [
+        'Monaco', 'Monza', 'Silverstone', 'Spa-Francorchamps', 'Suzuka',
+        'Interlagos', 'Abu Dhabi', 'Barcelone', 'Shanghai'
+      ],
+      moyen: [
+        'Hungaroring', 'Zandvoort', 'Imola', 'Bakou', 'Marina Bay', 'Austin',
+        'Circuit Gilles-Villeneuve', 'Red Bull Ring', 'Sakhir', 'Albert Park'
+      ],
+      difficile: [
+        'Jeddah', 'Las Vegas', 'Miami', 'Losail', 'Paul Ricard', 'Nürburgring'
+      ]
+    }
   }
 };

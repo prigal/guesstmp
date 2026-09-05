@@ -4,8 +4,9 @@ import { createGame } from './game.js';
 import {
   showScreen, buildCategoryGrid, setGameBackground, setWord, setTimer, setScore,
   flashCorrect, flashWrong, showCountdown, hideCountdown, showTouchControls,
-  renderRecap
+  renderRecap, setGameRenderer, getGameRenderer
 } from './ui.js';
+import { circuitSvg } from '../data/circuits.js';
 import {
   initAudio, resumeAudio, playCorrect, playPass, playTick, playEnd
 } from './audio.js';
@@ -105,9 +106,9 @@ function setupNavBindings() {
   document.getElementById('btn-restart').addEventListener('click', restartGame);
   document.getElementById('btn-quit-game').addEventListener('click', quitGame);
 
-  // Double-tap on the word area to pause.
+  // Double-tap on the word / figure area to pause.
   let lastTapAt = 0;
-  document.getElementById('game-word').addEventListener('click', () => {
+  const onGameTap = () => {
     const now = Date.now();
     if (now - lastTapAt < 350) {
       lastTapAt = 0;
@@ -115,7 +116,9 @@ function setupNavBindings() {
     } else {
       lastTapAt = now;
     }
-  });
+  };
+  document.getElementById('game-word').addEventListener('click', onGameTap);
+  document.getElementById('game-figure').addEventListener('click', onGameTap);
 }
 
 function showExplanation(word) {
@@ -129,6 +132,10 @@ function showExplanation(word) {
   explainTimer = setTimeout(() => {
     document.getElementById('explain-word').textContent = word;
     document.getElementById('explain-text').textContent = text;
+    const fig = document.getElementById('explain-figure');
+    const svg = getGameRenderer() === 'circuit' ? circuitSvg(word) : '';
+    fig.innerHTML = svg;
+    fig.classList.toggle('hidden', !svg);
     const bar = document.getElementById('explain-bar');
     bar.style.animation = 'none';
     void bar.offsetWidth;
@@ -273,7 +280,8 @@ async function startGame() {
   await requestWakeLock();
 
   const cat = CATEGORIES[state.selectedCategory];
-  setGameBackground(cat.color);
+  setGameBackground(cat.color, !!cat.mono);
+  setGameRenderer(cat.render || 'text');
   setScore(0);
   state.score = 0;
   state.lastTickedSecond = null;

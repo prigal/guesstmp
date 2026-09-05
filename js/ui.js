@@ -1,4 +1,15 @@
 import { CATEGORIES } from '../data/categories.js';
+import { circuitSvg } from '../data/circuits.js';
+
+let renderer = 'text';
+
+export function setGameRenderer(type) {
+  renderer = type || 'text';
+}
+
+export function getGameRenderer() {
+  return renderer;
+}
 
 const screens = ['home', 'howto', 'setup', 'prep', 'game', 'recap'];
 
@@ -24,7 +35,7 @@ export function buildCategoryGrid(onSelect) {
     card.innerHTML = `
       <div class="cat-emoji">${cat.emoji}</div>
       <div class="cat-label">${cat.label}</div>
-      <div class="cat-count">${total} mots</div>
+      <div class="cat-count">${total} ${cat.unit || 'mots'}</div>
     `;
     card.addEventListener('click', () => {
       grid.querySelectorAll('.category-card').forEach(c => c.classList.remove('selected'));
@@ -35,12 +46,27 @@ export function buildCategoryGrid(onSelect) {
   }
 }
 
-export function setGameBackground(color) {
-  document.getElementById('screen-game').style.setProperty('--cat-color', color);
+export function setGameBackground(color, mono = false) {
+  const screen = document.getElementById('screen-game');
+  screen.style.setProperty('--cat-color', color);
+  screen.classList.toggle('game-mono', !!mono);
 }
 
 export function setWord(text) {
-  document.getElementById('game-word').textContent = text;
+  const wordEl = document.getElementById('game-word');
+  const figureEl = document.getElementById('game-figure');
+  if (renderer === 'circuit') {
+    const svg = circuitSvg(text);
+    figureEl.innerHTML = svg;
+    figureEl.classList.toggle('hidden', !svg || !text);
+    wordEl.textContent = svg ? '' : text;
+    wordEl.classList.toggle('hidden', !!svg);
+  } else {
+    figureEl.innerHTML = '';
+    figureEl.classList.add('hidden');
+    wordEl.classList.remove('hidden');
+    wordEl.textContent = text;
+  }
 }
 
 export function setTimer(seconds) {
