@@ -1,4 +1,11 @@
 export const DESC_formule1 = {
+  "Mexico": "Autódromo Hermanos Rodríguez à Mexico, en altitude (2 200 m), avec le passage dans l'ancien stade de baseball Foro Sol. Ambiance de folie pour Checo Pérez.",
+  "Sotchi": "Circuit russe autour du parc olympique des JO 2014, au bord de la mer Noire. Grand Prix de 2014 à 2021, dominé par Mercedes.",
+  "Hockenheim": "Circuit allemand près de Heidelberg, jadis très rapide à travers la forêt, raccourci en 2002. Grand Prix d'Allemagne en alternance avec le Nürburgring.",
+  "Indianapolis": "Le célèbre ovale des 500 Miles, dont la F1 a utilisé une partie avec un tracé intérieur de 2000 à 2007. Fiasco des six voitures au départ en 2005.",
+  "Madrid": "Le Madring, nouveau circuit semi-urbain autour du parc des expositions IFEMA à Madrid, qui accueille le Grand Prix d'Espagne à partir de 2026.",
+  "Buenos Aires": "Autódromo Oscar y Juan Gálvez, circuit de la capitale argentine, terre de Fangio. Grand Prix d'Argentine jusqu'en 1998.",
+  "Jacarepaguá": "Circuit de Rio de Janeiro, plat et en bord de lagune, Grand Prix du Brésil dans les années 80 avant Interlagos. Démoli pour les JO 2016.",
   "Lewis Hamilton": "Pilote britannique aux 7 titres mondiaux, record de victoires et de pole positions. Longtemps chez Mercedes, puis Ferrari. Militant engagé.",
   "Max Verstappen": "Pilote néerlandais de Red Bull, champion du monde 2021 à 2024. Le plus jeune pilote de l'histoire à ses débuts, à 17 ans.",
   "Michael Schumacher": "Légende allemande aux 7 titres mondiaux, dont 5 avec Ferrari. Grave accident de ski en 2013, état de santé tenu secret.",

@@ -1,4 +1,4 @@
-const CACHE_NAME = 'devine-tete-v8';
+const CACHE_NAME = 'devine-tete-v9';
 const PRECACHE = [
   './',
   './index.html',

@@ -14,7 +14,7 @@ Clone web mobile du jeu **Devine Tête** (Heads Up!) en français. Tiens le tél
 - Récapitulatif final avec liste des mots trouvés/passés
 - **PWA installable** : icônes, manifest, service worker pour fonctionner hors-ligne
 - **Explication du mot raté** : après une passe, une carte « Raté ! » explique le mot en 2-3 lignes (chrono en pause)
-- **Mode Circuits F1** 🏁 : à la place d'un mot, le tracé stylisé noir et blanc d'un circuit vu d'en haut — à faire deviner à partir de sa forme
+- **Mode Circuits F1** 🏁 : à la place d'un mot, le tracé noir et blanc d'un circuit vu d'en haut, généré depuis sa géométrie GPS réelle — à faire deviner à partir de sa forme
 
 ## 🚀 Lancer en local
 
@@ -78,6 +78,10 @@ Une fois installée, l'app fonctionne en plein écran, et le service worker la r
 - **Le téléphone ne réagit pas à l'inclinaison** → coche « Inverser les commandes » dans l'écran de sélection, ou utilise les zones tactiles gauche/droite qui apparaissent automatiquement si l'orientation n'est pas détectée.
 - **L'écran s'éteint pendant la partie** → l'API Wake Lock n'est pas supportée sur ton appareil. Sur iOS, garde le téléphone branché ou augmente le délai de mise en veille.
 - **L'app ne se met pas en paysage** → tourne le téléphone manuellement, un overlay t'invitera à le faire si tu es en portrait.
+
+## 🙏 Crédits
+
+Les tracés de circuits sont générés à partir des données GeoJSON de [bacinger/f1-circuits](https://github.com/bacinger/f1-circuits) (MIT, © Tomislav Bacinger).
 
 ## 📄 Licence
 
