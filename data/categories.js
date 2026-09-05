@@ -419,5 +419,57 @@ export const CATEGORIES = {
         'Caqueter', 'Bredouiller'
       ]
     }
+  },
+
+  formule1: {
+    label: 'Formule 1',
+    emoji: '🏎️',
+    color: '#f97316',
+    words: {
+      facile: [
+        'Lewis Hamilton', 'Max Verstappen', 'Michael Schumacher', 'Ayrton Senna',
+        'Fernando Alonso', 'Sebastian Vettel', 'Charles Leclerc', 'Alain Prost',
+        'Lando Norris', 'Carlos Sainz', 'George Russell', 'Kimi Räikkönen',
+        'Nico Rosberg', 'Jenson Button', 'Niki Lauda', 'Pierre Gasly',
+        'Esteban Ocon', 'Oscar Piastri', 'Sergio Pérez', 'Daniel Ricciardo',
+        'Monaco', 'Monza', 'Silverstone', 'Spa-Francorchamps', 'Suzuka',
+        'Interlagos', 'Nürburgring', 'Paul Ricard', 'Barcelone', 'Abu Dhabi',
+        'Ferrari', 'Mercedes', 'Red Bull', 'McLaren', 'Alpine'
+      ],
+      moyen: [
+        'Mika Häkkinen', 'Jacques Villeneuve', 'Damon Hill', 'Nigel Mansell',
+        'Nelson Piquet', 'Jackie Stewart', 'Jim Clark', 'Juan Manuel Fangio',
+        'Emerson Fittipaldi', 'Mario Andretti', 'Gilles Villeneuve',
+        'Rubens Barrichello', 'Felipe Massa', 'Mark Webber', 'Valtteri Bottas',
+        'Romain Grosjean', 'Jean Alesi', 'Olivier Panis',
+        'Hungaroring', 'Zandvoort', 'Imola', 'Bakou', 'Marina Bay',
+        'Austin', 'Albert Park', 'Circuit Gilles-Villeneuve', 'Red Bull Ring',
+        'Jeddah', 'Las Vegas', 'Miami', 'Losail', 'Shanghai', 'Sakhir',
+        'Toto Wolff', 'Christian Horner', 'Frédéric Vasseur', 'Zak Brown',
+        'Andrea Stella', 'Guenther Steiner', 'Ron Dennis', 'Flavio Briatore',
+        'Jean Todt', 'Ross Brawn',
+        'Williams', 'Aston Martin', 'Haas', 'Sauber', 'Renault F1', 'Lotus',
+        'Brabham', 'Benetton', 'Toro Rosso'
+      ],
+      difficile: [
+        'Alberto Ascari', 'Giuseppe Farina', 'Mike Hawthorn', 'Phil Hill',
+        'Jack Brabham', 'Graham Hill', 'John Surtees', 'Denny Hulme',
+        'Jochen Rindt', 'Jody Scheckter', 'Alan Jones', 'Keke Rosberg',
+        'Didier Pironi', 'Jacques Laffite', 'Patrick Depailler',
+        'Jean-Pierre Beltoise', 'François Cevert', 'Jo Siffert',
+        'Clay Regazzoni', 'Ronnie Peterson', 'René Arnoux',
+        'Jean-Pierre Jabouille',
+        'Watkins Glen', 'Kyalami', 'Jarama', 'Zolder', 'Estoril', 'Adelaide',
+        'Magny-Cours', 'Dijon-Prenois', 'Long Beach', 'Sepang', 'Istanbul Park',
+        'Portimão', 'Mugello', 'Brands Hatch', 'Österreichring',
+        'Colin Chapman', 'Enzo Ferrari', 'Ken Tyrrell', 'Frank Williams',
+        'Peter Sauber', 'Eddie Jordan', 'Guy Ligier', 'Mattia Binotto',
+        'Otmar Szafnauer', 'Franz Tost', 'Cyril Abiteboul',
+        'Maurizio Arrivabene',
+        'Tyrrell', 'Ligier', 'Jordan', 'Minardi', 'Arrows', 'Prost GP',
+        'BAR', 'Jaguar Racing', 'Stewart GP', 'Force India', 'Racing Point',
+        'Caterham', 'Marussia', 'Super Aguri'
+      ]
+    }
   }
 };

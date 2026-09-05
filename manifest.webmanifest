@@ -1,15 +1,24 @@
 {
+  "id": "./",
   "name": "Devine Tête",
   "short_name": "Devine Tête",
   "description": "Le jeu où tu devines ce qui est écrit sur ton front",
   "lang": "fr",
   "start_url": "./",
   "scope": "./",
-  "display": "fullscreen",
+  "display": "standalone",
+  "display_override": [
+    "fullscreen",
+    "standalone",
+    "minimal-ui"
+  ],
   "orientation": "landscape",
   "background_color": "#0f172a",
   "theme_color": "#0f172a",
-  "categories": ["games", "entertainment"],
+  "categories": [
+    "games",
+    "entertainment"
+  ],
   "icons": [
     {
       "src": "assets/icon-192.png",

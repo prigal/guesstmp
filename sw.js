@@ -1,4 +1,4 @@
-const CACHE_NAME = 'devine-tete-v5';
+const CACHE_NAME = 'devine-tete-v6';
 const PRECACHE = [
   './',
   './index.html',
@@ -19,9 +19,13 @@ const PRECACHE = [
 ];
 
 self.addEventListener('install', (event) => {
+  // Add files one by one so a single missing asset can't abort the whole
+  // install (cache.addAll is atomic and would leave users on a stale SW).
   event.waitUntil(
     caches.open(CACHE_NAME)
-      .then((cache) => cache.addAll(PRECACHE))
+      .then((cache) => Promise.allSettled(
+        PRECACHE.map((url) => cache.add(url).catch(() => {}))
+      ))
       .then(() => self.skipWaiting())
   );
 });
